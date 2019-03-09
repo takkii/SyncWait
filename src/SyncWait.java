@@ -125,7 +125,7 @@ class SyncInvert {
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                System.out.println("返答をありがとう..." + hello + "...始めます...");
+                System.out.println(hello + "...返答をありがとう...シュミレーション開始...");
                 seller.start();
                 buyer.start();
             }
