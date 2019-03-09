@@ -1,5 +1,9 @@
 //在庫管理プログラム
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 class SyncInvert {
     private int count; //在庫数
 
@@ -11,9 +15,10 @@ class SyncInvert {
         //在庫が足りるか
         if (count < amount) {
             System.out.println("================ ship() 待機.");
-            //入庫待ち
-            wait(); //入庫されるまで待機
-            System.out.println("================ ship() 解放.");
+            try {
+                wait(); //入庫されるまで待ち状態
+            } catch (InterruptedException ignored) {}
+            System.out.println("================ arrive() 解放.");
         }
         //在庫数の減算
         count -= amount;
@@ -60,6 +65,7 @@ class SyncInvert {
                     si.ship(amount);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    break;
                 }
             }
         }
@@ -81,6 +87,7 @@ class SyncInvert {
                     si.arrive(amount);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    break;
                 }
             }
         }
@@ -92,8 +99,18 @@ class SyncInvert {
             Seller seller = new Seller(si, 15);
             Buyer buyer = new Buyer(si, 30);
 
-            seller.start();
-            buyer.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            System.out.println("意気込みをどうぞ!");
+            String hello = null;
+            try {
+                hello = reader.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                System.out.println("返答をありがとう..." + hello + "...始めます...");
+                seller.start();
+                buyer.start();
+            }
         }
     }
 
