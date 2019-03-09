@@ -1,22 +1,25 @@
 //在庫管理プログラム
 
 class SyncInvertory {
-    private int count;
+    private int count; //在庫数
 
     public SyncInvertory() {
         count = 50;
     }
 
     public synchronized void ship(int amount) {
+        //在庫が足りるか
         if (count < amount) {
             System.out.println("================ ship() 待機.");
+            //入庫待ち
             try {
-                wait();
+                wait(); //入庫されるまで待機
             } catch (InterruptedException e) {}
             System.out.println("================ ship() 解放.");
         }
+        //在庫数の減算
         count -= amount;
-        notify();
+        notify(); //待ち状態のスレッドへ解除通知
         try {
             Thread.sleep((long) (Math.random() * 1000));
         } catch (InterruptedException e) {}
@@ -26,15 +29,18 @@ class SyncInvertory {
     }
 
     public synchronized void arrive(int amount) {
+        //在庫最大数
         if ((count + amount) > 50) {
             System.out.println("================ arrive() 待機.");
+            //出庫待ち
             try {
-                wait();
+                wait(); //出庫されるまで待ち状態
             } catch (InterruptedException ignored) {}
             System.out.println("================ arrive() 解放.");
         }
+        //在庫数の加算
         count += amount;
-        notify();
+        notify(); //待ち状態のスレッドへ解除通知
         try {
             Thread.sleep((long) (Math.random() * 1000));
         } catch (InterruptedException e) {}
@@ -45,7 +51,7 @@ class SyncInvertory {
     }
 
     class Seller extends Thread {
-        private int amount;
+        private int amount; //引き落とし数
         private SyncInvertory si;
 
         public Seller(SyncInvertory si, int amount) {
@@ -54,6 +60,7 @@ class SyncInvertory {
         }
 
         public void run() {
+            //在庫数減産用メソッド呼び出し
             while (true) {
                 si.ship(amount);
             }
@@ -61,7 +68,7 @@ class SyncInvertory {
     }
 
     class Buyer extends Thread {
-        private int amount;
+        private int amount; //補充数
         private SyncInvertory si;
 
         public Buyer(SyncInvertory si, int amount) {
@@ -70,6 +77,7 @@ class SyncInvertory {
         }
 
         public void run() {
+            // 在庫補充用メソッド呼び出し
             while (true) {
                 si.arrive(amount);
             }
@@ -102,4 +110,5 @@ class SyncInvertory {
             現在の在庫数 : 35
             ----------------------
 
+            ~~~繰り返し~~~
 */
