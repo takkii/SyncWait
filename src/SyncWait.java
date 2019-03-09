@@ -33,7 +33,7 @@ class SyncInvert {
             try {
                 wait(); //入庫されるまで待ち状態
             } catch (InterruptedException ignored) {}
-            System.out.println("================ arrive() 解放.");
+            System.out.println("================ ship() 解放.");
         }
         //在庫数の減算
         count -= amount;
