@@ -5,10 +5,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 class SyncInvert {
+
+    // チェッカー 独自アノテーション
+    public @interface Check{
+        boolean value() default true;
+    }
+    public @interface status{
+        String value();
+        int id();
+    }
+
+    @Check(false) // 標準はfalse、特筆すべきとき@Check()
+    @status(id = 1, value = "stock")
     private int count; //在庫数
 
     SyncInvert() {
-        count = 50;
+        count = 50; //在庫数制限
     }
 
     synchronized void ship(int amount) throws InterruptedException {
@@ -50,6 +62,9 @@ class SyncInvert {
     }
 
     class Seller extends Thread {
+
+        @SyncInvert.Check(false) // 標準はfalse、特筆すべきとき@Check()
+        @SyncInvert.status(id = 2, value = "deductions")
         private int amount; //引き落とし数
         private SyncInvert si;
 
@@ -72,6 +87,9 @@ class SyncInvert {
     }
 
     class Buyer extends Thread {
+
+        @SyncInvert.Check(false) // 標準はfalse、特筆すべきとき@Check()
+        @SyncInvert.status(id = 3, value = "replenishment")
         private int amount; //補充数
         private SyncInvert si;
 
