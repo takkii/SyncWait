@@ -122,7 +122,7 @@ class SyncInvert {
             Buyer buyer = new Buyer(si, 30);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("意気込みをどうぞ!");
+            System.out.println("意気込みをどうぞ!...終了は Ctrl+C または▲などの停止ボタン!");
             String hello = null;
             try {
                 hello = reader.readLine();
